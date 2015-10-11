@@ -123,6 +123,7 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
     }
     @Override
     public void onSensorChanged(SensorEvent event) {
+        /* 加速度センサーより取得した値を調整 */
         gy = event.values[0];
         gx = event.values[1];
     }
