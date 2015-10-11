@@ -1,4 +1,4 @@
-package androidboardgame.syslink.com.dropball;
+package androidboardgame.syslink.com.korokorobear;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
