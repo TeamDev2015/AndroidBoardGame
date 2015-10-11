@@ -124,8 +124,8 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
     @Override
     public void onSensorChanged(SensorEvent event) {
         /* 加速度センサーより取得した値を調整 */
-        gy = event.values[0];
-        gx = event.values[1];
+        gy = event.values[0] / 10;
+        gx = event.values[1] / 10;
     }
     @Override
     public void onAccuracyChanged(
