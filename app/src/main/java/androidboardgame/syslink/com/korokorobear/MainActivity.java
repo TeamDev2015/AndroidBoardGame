@@ -1,6 +1,7 @@
 package androidboardgame.syslink.com.korokorobear;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.Sensor;
@@ -124,8 +125,8 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
             bear.vx = 0;
             bear.vy = 0;
             bear.invalidate();
-            /* 処理を停止する。 */
-            bear.invalidate();
+            /* GameOver画面の呼び出し */
+            gameOver();
         } else {
             /* 処理を停止する。 */
             bear.invalidate();
@@ -170,5 +171,11 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
     @Override
     public void onAccuracyChanged(
             Sensor sensor, int accuracy) {
+    }
+    //GameOver画面遷移
+    public void gameOver(){
+        Intent intent = new Intent();
+        intent.setClassName("androidboardgame.syslink.com.korokorobear", "androidboardgame.syslink.com.korokorobear.GameOverActivity");
+        startActivity(intent);
     }
 }

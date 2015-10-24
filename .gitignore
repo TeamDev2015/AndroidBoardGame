@@ -5,3 +5,14 @@
 .DS_Store
 /build
 /captures
+.idea/.name
+.idea/compiler.xml
+.idea/dictionaries/admin.xml
+.idea/dictionaries/toya.xml
+.idea/encodings.xml
+.idea/gradle.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/runConfigurations.xml
+.idea/vcs.xml
+app/app.iml
