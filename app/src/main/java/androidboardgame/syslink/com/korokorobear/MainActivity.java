@@ -13,6 +13,9 @@ import android.os.Handler;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
 import java.util.List;
@@ -59,13 +62,7 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
         handler = new Handler();
         handler.postDelayed(this, 3000);
 
-        WindowManager windowManager =
-                (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        /* 画面関係の値を取得 */
-        Display display = windowManager.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
+        Point size = getDisplaySize();
         width = size.x;
         height = size.y;
         dpi = getResources().getDisplayMetrics().densityDpi;
@@ -96,42 +93,42 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
         bear.x += dpi * bear.vx * time / 25.4;
         bear.y += dpi * bear.vy * time / 25.4;
 
-        /* ブロックの移動座標を設定 X */
-        if (0 < block.x) {
-            /* ブロックのX座標を移動 */
-            block.x -= 25;
-        } else {
-            /* 左端までいったら右端に移動 */
-            block.x = width;
-            /* 左端まで行ったら高さをランダムで変更 */
-            Random rnd = new Random();
-            block.y = rnd.nextInt(height - block.pSize);
-        }
+       /* ブロックの移動座標を設定 X */
+       if (0 < block.x) {
+           /* ブロックのX座標を移動 */
+           block.x -= 25;
+       } else {
+           /* 左端までいったら右端に移動 */
+           block.x = width;
+           /* 左端まで行ったら高さをランダムで変更 */
+           Random rnd = new Random();
+           block.y = rnd.nextInt(height - block.pSize);
+       }
 
         /* X座標が画像の大きさ以下の場合 */
         if (bear.x <= bear.pSize) {
             /* X座標を画面をはみ出さない位置に設定 */
             bear.x = bear.pSize;
-            bear.vx = -bear.vx / 3;
+            bear.vx = -bear.vx / 2;
         } else if (bear.x >= width - bear.pSize) {
             /* X座標が画面の幅 - 画像の大きさ 以上の場合 */
 
             /* X座標を画面をはみ出さない位置に設定 */
             bear.x = width - bear.pSize;
-            bear.vx = -bear.vx / 3;
+            bear.vx = -bear.vx / 2;
         }
 
         /* Y座標が画像の大きさ以下の場合 */
         if (bear.y <= bear.pSize) {
             /* Y座標を画面をはみ出さない位置に設定 */
             bear.y = bear.pSize;
-            bear.vy = -bear.vy / 3;
+            bear.vy = -bear.vy / 2;
         } else if (bear.y >= height - bear.pSize) {
             /* Y座標が画面の高さ - 画像の大きさ 以上の場合 */
 
             /* Y座標を画面をはみ出さない位置に設定 */
             bear.y = height - bear.pSize;
-            bear.vy = -bear.vy / 3;
+            bear.vy = -bear.vy / 2;
         }
 
         /* 衝突判定 */
@@ -146,8 +143,56 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
             bear.vx = 0;
             bear.vy = 0;
             bear.invalidate();
-            /* GameOver画面の呼び出し */
-            gameOver();
+
+            /* クマを回転させる */
+            RotateAnimation rotateAnimation = new RotateAnimation(0, 360, bear.x, bear.y);
+            rotateAnimation.setDuration(1000);
+            bear.startAnimation(rotateAnimation);
+
+            /* アニメーションリスナの登録 */
+            rotateAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    // アニメーションの開始時に呼ばれます
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                    // アニメーションの繰り返し時に呼ばれます。
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    // アニメーションの終了時に呼ばれます
+
+                    /* 画面外にクマを移動させる。 */
+                    TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, height);
+                    translateAnimation.setDuration(2000);
+                    translateAnimation.setFillAfter(true);
+                    bear.startAnimation(translateAnimation);
+
+                    /* アニメーションリスナの登録 */
+                    translateAnimation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            // アニメーションの開始時に呼ばれます
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                            // アニメーションの繰り返し時に呼ばれます
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            // アニメーションの終了時に呼ばれます
+                            /* GameOver画面の呼び出し */
+                            gameOver();
+                        }
+                    });
+                }
+            });
+
         } else {
             /* 処理を停止する。 */
             bear.invalidate();
@@ -202,5 +247,20 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
         Intent intent = new Intent();
         intent.setClassName("androidboardgame.syslink.com.korokorobear", "androidboardgame.syslink.com.korokorobear.GameOverActivity");
         startActivity(intent);
+    }
+
+    /**
+     * 画面サイズを取得します。
+     * @return 画面サイズ
+     */
+    public Point getDisplaySize() {
+
+        WindowManager windowManager =
+                (WindowManager) getSystemService(WINDOW_SERVICE);
+        /* 画面関係の値を取得 */
+        Display display = windowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size;
     }
 }
