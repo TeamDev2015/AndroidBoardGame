@@ -37,34 +37,22 @@ public class GameOverActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    /**
-     *  描画用のクラス
-     */
     class MyOverView extends View {
         private Context mContext;
-        /**
-         * コンストラクタ
-         * @param c
-         */
+
         public MyOverView(Context c) {
             super(c);
             mContext = c;
             setFocusable(true);
-            // Resourceインスタンスの生成
+
             Resources res = this.getContext().getResources();
         }
 
-        /**
-         * 描画処理
-         */
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             Paint paint;
-		/* 背景色を設定 */
             canvas.drawColor(Color.BLACK);
 
-		/* 文字を描画 */
             paint = new Paint();
             paint.setColor(Color.WHITE);
             paint.setTextSize(100);

@@ -19,8 +19,8 @@ public class Bear extends View{
     float vx = 0;
     /* Y座標移動用 */
     float vy = 0;
-    /* 衝突判定用 円 半径 */
-    int radius = 0;
+    /* 衝突判定用 画像大きさ */
+    int pSize = 0;
     /* クマ画像 */
     private Bitmap korokoroBearBitmap;
 
@@ -35,7 +35,7 @@ public class Bear extends View{
         y = 0;
         vx = 0;
         vy = 0;
-        radius = 60;
+        pSize = 60;
 
         /* 画像を設定 */
         korokoroBearBitmap = BitmapFactory.decodeResource(

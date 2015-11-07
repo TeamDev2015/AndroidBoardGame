@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.view.View;
 
 /**
@@ -16,9 +15,8 @@ public class Block extends View{
     int x = 0;
     /* Y座標 */
     int y = 0;
-    /* 半径 */
-    int r = 0;
-    Paint p;
+    /* 画像大きさ */
+    int pSize = 0;
     /* 障害物画像 */
     private Bitmap blockBitmap;
 
@@ -31,7 +29,7 @@ public class Block extends View{
         /* 各変数の初期値を設定 */
         x = 0;
         y = 0;
-        r = 60;
+        pSize = 70;
 
         /* 画像を設定 */
         blockBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.block);
