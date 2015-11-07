@@ -24,6 +24,8 @@ import java.util.Random;
 public class MainActivity extends Activity implements Runnable, SensorEventListener {
     /** センサーマネージャ */
     SensorManager manager;
+    /** マップ */
+    Map map = null;
     /** クマクラス */
     Bear bear = null;
     /** ブロッククラス */
@@ -44,6 +46,10 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
     float dpi = 0;
     /** フレームレイアウト */
     FrameLayout framelayout = null;
+    /** 経過時間 */
+	Time elapsedTime = new Time();
+    /** パラメタ-経過時間 */
+    long paramTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +73,9 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
         height = size.y;
         dpi = getResources().getDisplayMetrics().densityDpi;
 
+        /* マップのインスタンスを作成 */
+        map = new Map(this);
+
         /* クマクラスのインスタンスを作成 */
         bear = new Bear(this);
         bear.x = width / 2;
@@ -80,8 +89,12 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
         /* 障害物の出現位置のY座標をランダムで設定 */
         block.y = rnd.nextInt(height - block.pSize);
         /* ビューに追加 */
+        framelayout.addView(map);
         framelayout.addView(block);
         framelayout.addView(bear);
+
+        //経過時間の計測開始
+        elapsedTime.Start();
     }
 
     @Override
@@ -143,6 +156,9 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
             bear.vx = 0;
             bear.vy = 0;
             bear.invalidate();
+            
+            //経過時間の取得
+            paramTime = elapsedTime.getElipseTime();
 
             /* クマを回転させる */
             RotateAnimation rotateAnimation = new RotateAnimation(0, 360, bear.x, bear.y);
@@ -187,7 +203,7 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
                         public void onAnimationEnd(Animation animation) {
                             // アニメーションの終了時に呼ばれます
                             /* GameOver画面の呼び出し */
-                            gameOver();
+                            gameOver(paramTime);
                         }
                     });
                 }
@@ -240,12 +256,11 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
             Sensor sensor, int accuracy) {
     }
 
-    /**
-     * GameOver画面遷移
-     */
-    public void gameOver(){
+    //GameOver画面遷移
+    public void gameOver(long elapsedTime){
         Intent intent = new Intent();
         intent.setClassName("androidboardgame.syslink.com.korokorobear", "androidboardgame.syslink.com.korokorobear.GameOverActivity");
+        intent.putExtra("elapsedTime", elapsedTime);
         startActivity(intent);
     }
 
