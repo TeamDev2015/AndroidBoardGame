@@ -8,19 +8,19 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
-import android.widget.Toast;
 
-
+/**
+ * ゲームオーバーアクティビティクラス
+ */
 public class GameOverActivity extends Activity {
+    /** 経過時間 */
     private long elapsedTime = 0;
+    /** 画面サイズ */
     private Point size;
 
     @Override
@@ -59,11 +59,9 @@ public class GameOverActivity extends Activity {
 
     /**
      * 画面サイズを取得します。
-     *
      * @return 画面サイズ
      */
     public Point getDisplaySize() {
-
         WindowManager windowManager =
                 (WindowManager) getSystemService(WINDOW_SERVICE);
         /* 画面関係の値を取得 */
@@ -75,34 +73,31 @@ public class GameOverActivity extends Activity {
 
 
     /**
-     * �`��p�̃N���X
+     * ゲームオーバー画面クラス
      */
     class MyOverView extends View {
-        private Context mContext;
+        private Context mContext = null;
 
         /**
-         * �R���X�g���N�^
-         *
+         * コンストラクタ
          * @param c
          */
         public MyOverView(Context c) {
             super(c);
             mContext = c;
             setFocusable(true);
-            // Resource�C���X�^���X�̐���
             Resources res = this.getContext().getResources();
         }
 
         /**
-         * �`�揈��
+         * 描画処理
+         * @param canvas
          */
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
             /* canvasの背景色 */
             canvas.drawColor(Color.BLACK);
-
-            System.out.println(elapsedTime);
 
             /* ゲームオーバー文字の表示 */
             Paint lblGameOver = new Paint();

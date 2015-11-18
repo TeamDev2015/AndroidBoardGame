@@ -35,7 +35,7 @@ public class Bear extends View{
         y = 0;
         vx = 0;
         vy = 0;
-        pSize = 60;
+        pSize = 30;
 
         /* 画像を設定 */
         korokoroBearBitmap = BitmapFactory.decodeResource(

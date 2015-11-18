@@ -21,6 +21,9 @@ import android.widget.FrameLayout;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * メインアクティビティクラス
+ */
 public class MainActivity extends Activity implements Runnable, SensorEventListener {
     /** センサーマネージャ */
     SensorManager manager;
@@ -55,8 +58,7 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /* フルスクリーン */
-        getWindow().addFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         /* タイトルなし */
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         /* フレーム設定 */
@@ -87,14 +89,14 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
         /* 障害物の出現位置のX座標は固定 */
         block.x = width;
         /* 障害物の出現位置のY座標をランダムで設定 */
-        block.y = rnd.nextInt(height - block.pSize);
+        block.y = rnd.nextInt(height - (block.pSize * 2));
         /* ビューに追加 */
         framelayout.addView(map);
         framelayout.addView(block);
         framelayout.addView(bear);
 
-        //経過時間の計測開始
-        elapsedTime.Start();
+        /* 経過時間の計測開始 */
+        elapsedTime.start();
     }
 
     @Override
@@ -115,32 +117,32 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
            block.x = width;
            /* 左端まで行ったら高さをランダムで変更 */
            Random rnd = new Random();
-           block.y = rnd.nextInt(height - block.pSize);
+           block.y = rnd.nextInt(height - (block.pSize * 2));
        }
 
-        /* X座標が画像の大きさ以下の場合 */
-        if (bear.x <= bear.pSize) {
+        /* X座標が0以下の場合 */
+        if (bear.x <= 0) {
             /* X座標を画面をはみ出さない位置に設定 */
             bear.x = bear.pSize;
             bear.vx = -bear.vx / 2;
-        } else if (bear.x >= width - bear.pSize) {
+        } else if (bear.x >= (width - (bear.pSize * 2))) {
             /* X座標が画面の幅 - 画像の大きさ 以上の場合 */
 
             /* X座標を画面をはみ出さない位置に設定 */
-            bear.x = width - bear.pSize;
+            bear.x = bear.x - bear.pSize;
             bear.vx = -bear.vx / 2;
         }
 
-        /* Y座標が画像の大きさ以下の場合 */
-        if (bear.y <= bear.pSize) {
+        /* Y座標が0以下の場合 */
+        if (bear.y <= 0) {
             /* Y座標を画面をはみ出さない位置に設定 */
             bear.y = bear.pSize;
             bear.vy = -bear.vy / 2;
-        } else if (bear.y >= height - bear.pSize) {
+        } else if (bear.y >= height - (bear.pSize * 2)) {
             /* Y座標が画面の高さ - 画像の大きさ 以上の場合 */
 
             /* Y座標を画面をはみ出さない位置に設定 */
-            bear.y = height - bear.pSize;
+            bear.y = bear.y - bear.pSize;
             bear.vy = -bear.vy / 2;
         }
 
@@ -157,7 +159,7 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
             bear.vy = 0;
             bear.invalidate();
             
-            //経過時間の取得
+            /* 経過時間の取得 */
             paramTime = elapsedTime.getElipseTime();
 
             /* クマを回転させる */
@@ -252,11 +254,14 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
     }
 
     @Override
-    public void onAccuracyChanged(
-            Sensor sensor, int accuracy) {
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
-    //GameOver画面遷移
+    /**
+     * GameOver画面に遷移します。
+     * @param elapsedTime 経過時間
+     */
     public void gameOver(long elapsedTime){
         Intent intent = new Intent();
         intent.setClassName("androidboardgame.syslink.com.korokorobear", "androidboardgame.syslink.com.korokorobear.GameOverActivity");
@@ -269,7 +274,6 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
      * @return 画面サイズ
      */
     public Point getDisplaySize() {
-
         WindowManager windowManager =
                 (WindowManager) getSystemService(WINDOW_SERVICE);
         /* 画面関係の値を取得 */
