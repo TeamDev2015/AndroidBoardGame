@@ -1,6 +1,9 @@
 package androidboardgame.syslink.com.korokorobear;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -8,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +26,10 @@ public class GameOverActivity extends Activity {
     private long elapsedTime = 0;
     /** 画面サイズ */
     private Point size;
+    /** ハンドラ */
+    private final Handler handler = new Handler();
+    /** コンテキスト */
+    private final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +48,46 @@ public class GameOverActivity extends Activity {
 
         /*画面サイズの取得*/
         size = getDisplaySize();
+
+        /* 1秒後にダイアログを表示 */
+        handler.postDelayed(showDialogTask, 1000);
     }
+
+    /**
+     *  ダイアログを表示
+     */
+    private final Runnable showDialogTask = new Runnable() {
+        @Override
+        public void run() {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+            /* アラートダイアログのタイトルを設定 */
+            alertDialogBuilder.setTitle("確認");
+            /* アラートダイアログのメッセージを設定 */
+            alertDialogBuilder.setMessage("リトライしますか？");
+            /* アラートダイアログのはいボタンがクリックされた時に呼び出されるコールバックリスナー */
+            alertDialogBuilder.setPositiveButton("はい",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                            /* メイン画面に戻る */
+                            moveMainActivity();
+                        }
+                    });
+            /* アラートダイアログのいいえボタンがクリックされた時に呼び出されるコールバックリスナー */
+            alertDialogBuilder.setNegativeButton("いいえ",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+            /* アラートダイアログのキャンセルが可能かどうかを設定 */
+            alertDialogBuilder.setCancelable(true);
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            /* アラートダイアログを表示 */
+            alertDialog.show();
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,5 +164,14 @@ public class GameOverActivity extends Activity {
             yPos = (int) ((canvas.getHeight() / 2 + 200) - ((lblScore.descent() + lblScore.ascent()) / 2));
             canvas.drawText("生き残った時間:" + String.valueOf(elapsedTime) + "秒", xPos, yPos, lblScore);
         }
+    }
+
+    /**
+     * メイン画面に遷移します。
+     */
+    public void moveMainActivity(){
+        Intent intent = new Intent();
+        intent.setClassName("androidboardgame.syslink.com.korokorobear", "androidboardgame.syslink.com.korokorobear.MainActivity");
+        startActivity(intent);
     }
 }

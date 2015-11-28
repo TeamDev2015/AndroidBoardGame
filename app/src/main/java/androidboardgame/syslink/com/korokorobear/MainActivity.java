@@ -204,6 +204,7 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
                         @Override
                         public void onAnimationEnd(Animation animation) {
                             // アニメーションの終了時に呼ばれます
+                            finish();
                             /* GameOver画面の呼び出し */
                             gameOver(paramTime);
                         }
