@@ -26,7 +26,7 @@ public class Map extends View {
 
         /* 画像を設定 */
         map=BitmapFactory.decodeResource(
-                getResources(),R.drawable.backgrund);
+                getResources(),R.drawable.background);
     }
 
     /**

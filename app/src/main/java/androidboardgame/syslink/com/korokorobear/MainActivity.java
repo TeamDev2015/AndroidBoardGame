@@ -39,6 +39,10 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
     int width = 0;
     /** 高さ */
     int height = 0;
+
+    int mapWidth = 0;
+    int mapHeight = 0;
+
     /** 処理時間 */
     int time = 0;
     /** 加速度センサー取得値 X */
@@ -58,7 +62,8 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /* フルスクリーン */
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         /* タイトルなし */
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         /* フレーム設定 */
@@ -77,6 +82,10 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
 
         /* マップのインスタンスを作成 */
         map = new Map(this);
+        mapWidth = map.getWidth();
+        mapHeight = map.getHeight();
+
+        map.x = mapWidth - width;
 
         /* クマクラスのインスタンスを作成 */
         bear = new Bear(this);
@@ -101,6 +110,13 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
 
     @Override
     public void run() {
+
+        if(map.x <= 0){
+            map.x += 5;
+        } else {
+            map.x = mapWidth - width;
+        }
+
         /* クマの移動座標を計算 */
         bear.vx += gx * time / 1000;
         bear.vy += gy * time / 1000;
@@ -216,6 +232,7 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
             /* 処理を停止する。 */
             bear.invalidate();
             block.invalidate();
+            map.invalidate();
             /* 処理を再開する。 */
             handler.postDelayed(this, time);
         }
