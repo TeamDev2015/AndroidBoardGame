@@ -39,10 +39,10 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
     int width = 0;
     /** 高さ */
     int height = 0;
-
+    /** マップ画像 幅 */
     int mapWidth = 0;
+    /** マップ画像 高さ */
     int mapHeight = 0;
-
     /** 処理時間 */
     int time = 0;
     /** 加速度センサー取得値 X */
@@ -57,6 +57,8 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
 	Time elapsedTime = new Time();
     /** パラメタ-経過時間 */
     long paramTime = 0;
+    /** マップ リソースファイル名 */
+    int resourceName = R.drawable.background;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +84,11 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
 
         /* マップのインスタンスを作成 */
         map = new Map(this);
-        mapWidth = map.getWidth();
-        mapHeight = map.getHeight();
-
-        map.x = mapWidth - width;
+        /* マップ画像のサイズを取得 */
+        ImageSizeGet imgSize = new ImageSizeGet(this, resourceName);
+        mapWidth = imgSize.getWidth();
+        mapHeight = imgSize.getHeight();
+        map.x = width - mapWidth;
 
         /* クマクラスのインスタンスを作成 */
         bear = new Bear(this);
@@ -99,6 +102,7 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
         block.x = width;
         /* 障害物の出現位置のY座標をランダムで設定 */
         block.y = rnd.nextInt(height - (block.pSize * 2));
+
         /* ビューに追加 */
         framelayout.addView(map);
         framelayout.addView(block);
@@ -111,10 +115,11 @@ public class MainActivity extends Activity implements Runnable, SensorEventListe
     @Override
     public void run() {
 
-        if(map.x <= 0){
+        /* マップのX座標が0より小さい場合 */
+        if(map.x < 0){
             map.x += 5;
         } else {
-            map.x = mapWidth - width;
+            map.x = width - mapWidth;
         }
 
         /* クマの移動座標を計算 */
