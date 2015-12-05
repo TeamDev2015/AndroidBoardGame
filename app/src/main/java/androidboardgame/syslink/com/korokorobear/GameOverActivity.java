@@ -79,6 +79,7 @@ public class GameOverActivity extends Activity {
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            finish();
                         }
                     });
             /* アラートダイアログのキャンセルが可能かどうかを設定 */
